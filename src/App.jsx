@@ -48,8 +48,6 @@ function App() {
     }
 
     //fetch stock database info
-
-
   }
   React.useEffect(() => {
     fetchData();
