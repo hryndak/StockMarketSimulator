@@ -6,6 +6,8 @@ import React from 'react'
 import './index.css'
 import supabase from './config/supabaseClient'
 
+//ADD NEWS FEATURE
+
 function App() {
 
   const [loggedIn, setLoggedIn] = React.useState(false);
