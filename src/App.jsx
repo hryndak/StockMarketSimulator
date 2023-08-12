@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Register from './Pages/register'
 import Login from './Pages/login'
 import Dashboard from './Pages/dashboard'
@@ -137,6 +137,7 @@ function App() {
   return (
     <>
       <Routes>
+        <Route path="/" element={<Navigate to="/register" />} />
         <Route path="/register" element={<Register
           data={data}
           fetchData={fetchData}

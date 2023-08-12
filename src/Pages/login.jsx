@@ -16,8 +16,12 @@ export default function Login(props) {
                     <input onChange={props.handleChangeLogin} required type='password' placeholder='Password' className='placeholder:italic placeholder:text-slate-400 p-4 mb-2 w-72 h-10 rounded-md ' />
                     <br />
                     <input type='submit' value='Login' className='hover:cursor-pointer hover:bg-gray-200 w-32 h-8 rounded bg-white' />
-                    <Link to="/register">Register</Link>
-                    {props.loggedIn && <Navigate to='/dashboard' />}
+                    <br />
+                    <div className='mt-2'>
+                        <label className='' >Not a member?</label>
+                        <Link className='ml-2 underline decoration-sky-500' to="/register">SignUp now</Link>
+                        {props.loggedIn && <Navigate to='/dashboard' />}
+                    </div>
                 </form>
             </div>
 
