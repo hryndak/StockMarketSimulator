@@ -2,11 +2,12 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import Register from './Pages/register'
 import Login from './Pages/login'
 import Dashboard from './Pages/dashboard'
+import Buy from './Pages/dashboard/sites/buy'
 import React from 'react'
 import './index.css'
 import supabase from './config/supabaseClient'
 
-//ADD NEWS FEATURE
+
 
 function App() {
 
@@ -18,8 +19,12 @@ function App() {
     email: ' ',
     password: ' ',
     id: '',
-    loggedIn: false
+    loggedIn: false,
+    own_shares: { 'IBM': 2, 'APP': 3 },
+    money: 1000
   });
+
+  let temp;
 
   function stockURL(stock) {
     let name = stock.toUpperCase();
@@ -27,12 +32,20 @@ function App() {
   }
 
   function stock() {
-    fetch(stockURL('IBM'))
+    fetch(stockURL(temp))
       .then(response => response.json())
       .then(data => setStockData(data))
       .catch(error => console.log(error))
   }
 
+  const symbolHandleChange = (event) => {
+    temp = event.target.value;
+  }
+
+  const symbolHandleSubmit = (event) => {
+    event.preventDefault();
+    stock();
+  }
 
 
   const fetchData = async () => {
@@ -53,7 +66,7 @@ function App() {
   }
   React.useEffect(() => {
     fetchData();
-    stock();
+
   }, [])
 
 
@@ -92,7 +105,7 @@ function App() {
     if (!taken) {
       const { error } = await supabase
         .from('login')
-        .insert({ email: user.email, password: user.password })
+        .insert({ email: user.email, password: user.password, money: user.money, own_shares: user.own_shares })
       event.preventDefault();
     } else {
       event.preventDefault();
@@ -134,7 +147,6 @@ function App() {
     setLoggedIn(false);
   }
 
-  console.log(stockData);
 
   return (
     <>
@@ -159,7 +171,11 @@ function App() {
         <Route path='/dashboard' element={<Dashboard
           loggedIn={loggedIn}
           logOut={logOut}
+          symbolHandleChange={symbolHandleChange}
+          symbolHandleSubmit={symbolHandleSubmit}
+          stockData={stockData}
         />} />
+        <Route path='/dashboard/buy' element={<Buy/>} />
       </Routes>
     </>
   )
