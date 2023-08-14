@@ -3,6 +3,9 @@ import Register from './Pages/register'
 import Login from './Pages/login'
 import Dashboard from './Pages/dashboard'
 import Buy from './Pages/dashboard/sites/buy'
+import Check from './Pages/dashboard/sites/check'
+import Sell from './Pages/dashboard/sites/sell'
+import History from './Pages/dashboard/sites/history'
 import React from 'react'
 import './index.css'
 import supabase from './config/supabaseClient'
@@ -10,7 +13,8 @@ import supabase from './config/supabaseClient'
 
 
 function App() {
-
+  
+  const [element, setElement] = React.useState(null);
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [data, setData] = React.useState(null)
   const [taken, setTaken] = React.useState(false);
@@ -175,7 +179,6 @@ function App() {
           symbolHandleSubmit={symbolHandleSubmit}
           stockData={stockData}
         />} />
-        <Route path='/dashboard/buy' element={<Buy/>} />
       </Routes>
     </>
   )

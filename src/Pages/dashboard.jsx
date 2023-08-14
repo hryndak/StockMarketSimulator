@@ -1,35 +1,36 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import React from 'react'
+import Buy from './dashboard/sites/buy'
+import Sell from './dashboard/sites/sell'
+import History from './dashboard/sites/history'
+import Check from './dashboard/sites/check'
 import '/src/index.css'
 import supabase from '/src/config/supabaseClient'
 
 export default function Dashboard(props) {
 
-    console.log(props.stockData);
-
-    const [element,setElement] = React.useState(null);
+    const [selected, setSelected] = React.useState();
+    
+    const components = {
+        check: <Check
+            handleChange={props.symbolHandleChange}
+            handleSubmit={props.symbolHandleSubmit}
+        />,
+        buy: <Buy />,
+        sell: <Sell />,
+        history: <History />
+    }
 
     const handleClick = (event) => {
-        console.log(event.target.id)
-        switch(event.target.id) {
-            case 'check':
-                setElement(<Navigate to='/dashboard/check'/>)
-            case 'buy':
-                setElement(<Navigate to='/dashboard/buy'/>)
-            case 'sell':
-                setElement(<Navigate to='/dashboard/sell'/>)
-            case 'history':
-                setElement(<Navigate to='/dashboard/history'/>)
-            case 'portfolio':
-                setElement(<Navigate to='/dashboard/portfolio'/>)
-            default:
-                setElement(<Navigate to='/dashboard'/>)
+        if (components[event.target.id]) {
+            setSelected(components[event.target.id])
         }
     }
 
     return (
         <div>
             {!props.loggedIn && <Navigate to='/login' />}
+            {props.element}
             <nav>
                 <ul className='flex justify-end p-2 mr-10 text-lg'>
                     <li className='ml-8 justify-left w-screen'>STOCK MARKET SIMULATOR</li>
@@ -37,11 +38,10 @@ export default function Dashboard(props) {
                     <li id='buy' onClick={handleClick} className='ml-4'>Buy</li>
                     <li id='sell' onClick={handleClick} className='ml-4'>Sell</li>
                     <li id='history' onClick={handleClick} className='ml-4'>History</li>
-                    <li id='portfolio' onClick={handleClick} className='ml-4'>Portfolio</li>
                     <li onClick={props.logOut} className='ml-4 hover:cursor-pointer underline decoration-sky-900'>LogOut</li>
                 </ul>
             </nav>
-            {element}
+            {selected}
         </div>
     )
 }
