@@ -18,7 +18,6 @@ function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [data, setData] = React.useState(null)
   const [taken, setTaken] = React.useState(false);
-  const [stockData, setStockData] = React.useState(null);
   const [user, setUser] = React.useState({
     email: ' ',
     password: ' ',
@@ -27,30 +26,6 @@ function App() {
     own_shares: { 'IBM': 2, 'APP': 3 },
     money: 1000
   });
-
-  let temp;
-
-  function stockURL(stock) {
-    let name = stock.toUpperCase();
-    return import.meta.env.VITE_FINNHUB_URL + 'symbol=' + name + import.meta.env.VITE_FINNHUB_KEY;
-  }
-
-  function stock() {
-    fetch(stockURL(temp))
-      .then(response => response.json())
-      .then(data => setStockData(data))
-      .catch(error => console.log(error))
-  }
-
-  const symbolHandleChange = (event) => {
-    temp = event.target.value;
-  }
-
-  const symbolHandleSubmit = (event) => {
-    event.preventDefault();
-    stock();
-  }
-
 
   const fetchData = async () => {
 
@@ -175,9 +150,6 @@ function App() {
         <Route path='/dashboard' element={<Dashboard
           loggedIn={loggedIn}
           logOut={logOut}
-          symbolHandleChange={symbolHandleChange}
-          symbolHandleSubmit={symbolHandleSubmit}
-          stockData={stockData}
         />} />
       </Routes>
     </>

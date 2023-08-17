@@ -10,11 +10,38 @@ import supabase from '/src/config/supabaseClient'
 export default function Dashboard(props) {
 
     const [selected, setSelected] = React.useState();
+    const [stockData , setStockData] = React.useState();
+
+    let temp;
+
+    console.log(stock());
+
+    function stockURL(stock) {
+        let name = stock.toUpperCase();
+        return import.meta.env.VITE_FINNHUB_URL + 'symbol=' + name + import.meta.env.VITE_FINNHUB_KEY;
+      }
     
+      const symbolHandleChange = (event) => {
+        temp = event.target.value;
+      }
+    
+      function stock() {
+        fetch(stockURL())
+          .then(response => response.json())
+          .then(data => setStockData(data))
+          .catch(error => console.log(error))
+      }
+    
+      const symbolHandleSubmit = (event) => {
+        event.preventDefault();
+        stock();
+      }
+
+
     const components = {
         check: <Check
-            handleChange={props.symbolHandleChange}
-            handleSubmit={props.symbolHandleSubmit}
+            handleChange={symbolHandleChange}
+            handleSubmit={symbolHandleSubmit}
         />,
         buy: <Buy />,
         sell: <Sell />,
