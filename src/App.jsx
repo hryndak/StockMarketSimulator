@@ -40,8 +40,7 @@ function App() {
     if (data) {
       setData(data)
     }
-
-    //fetch stock database info
+    
   }
   React.useEffect(() => {
     fetchData();
