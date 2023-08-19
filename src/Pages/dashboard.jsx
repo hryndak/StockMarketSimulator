@@ -28,14 +28,6 @@ export default function Dashboard(props) {
         setShowStockPrice(false);
     }
 
-    const buyHandleChange = (event) => {
-
-    }
-
-    const buyHandleSubmit = (event) => {
-        event.preventDefault();
-    }
-
     React.useEffect(() => {
         fetchStockData(symbol);
     }, [showStockPrice])
@@ -45,16 +37,14 @@ export default function Dashboard(props) {
         setShowStockPrice(true);
     }
 
-    console.log(stockData);
-
     const components = {
         check: <Check
             handleChange={symbolHandleChange}
             handleSubmit={symbolHandleSubmit}
         />,
         buy: <Buy 
-            handleChange={buyHandleChange}
-            handleSubmit={buyHandleSubmit}
+            handleChange={props.buyHandleChange}
+            handleSubmit={props.buyHandleSubmit}
         />,
         sell: <Sell />,
         history: <History />

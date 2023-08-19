@@ -6,10 +6,10 @@ export default function Buy(props) {
 
     return (
         <div>
-            <form onSubmit={props.handleSubmit}>
-                <input type='text' onChange={props.handleChange} className='border-2'/>
-                <input type='number' onChange={props.handleChange} className='border-2'/>
-                <input type='submit' onChange={props.handleChange} className='border-2'/>
+            <form >
+                <input type='text'  required className='border-2'/>
+                <input type='number'  required min={0} className='border-2'/>
+                <input type='submit' className='border-2'/>
             </form>
         </div>
     )

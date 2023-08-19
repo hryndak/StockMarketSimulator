@@ -5,8 +5,6 @@ import supabase from '/src/config/supabaseClient'
 
 export default function Login(props) {
 
-    console.log(props.loggedIn)
-
     return (
         <div>
             <div className='bg-pink-700 h-screen flex text-center items-center justify-center'>
@@ -22,7 +20,7 @@ export default function Login(props) {
                         <input type='submit' value='Login' className='hover:cursor-pointer hover:bg-sky-600 w-36 h-10 bg-sky-800 text-zinc-100 mt-4' />
                         <div className='mt-4  '>
                             <label >Not a member?</label>
-                            <Link className='ml-2 underline decoration-sky-500' to="/login">Signup now</Link>
+                            <Link className='ml-2 underline decoration-sky-500' to="/register">Signup now</Link>
                             {props.loggedIn && <Navigate to='/dashboard' />}
                         </div>
                     </form>

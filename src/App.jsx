@@ -9,12 +9,13 @@ import History from './Pages/dashboard/sites/history'
 import React from 'react'
 import './index.css'
 import supabase from './config/supabaseClient'
+import { sha } from 'sha.js'
 
 
 
 function App() {
-  
-  const [element, setElement] = React.useState(null);
+  const [number, setNumber] = React.useState();
+  const [share, setShare] = React.useState();
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [data, setData] = React.useState(null)
   const [taken, setTaken] = React.useState(false);
@@ -40,11 +41,10 @@ function App() {
     if (data) {
       setData(data)
     }
-    
+
   }
   React.useEffect(() => {
     fetchData();
-
   }, [])
 
 
@@ -78,7 +78,6 @@ function App() {
   }
 
   const handleSubmitRegister = async event => {
-
     //checks if email is taken 
     if (!taken) {
       const { error } = await supabase
@@ -124,7 +123,6 @@ function App() {
   const logOut = () => {
     setLoggedIn(false);
   }
-
 
   return (
     <>
