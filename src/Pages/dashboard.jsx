@@ -43,8 +43,6 @@ export default function Dashboard(props) {
             handleSubmit={symbolHandleSubmit}
         />,
         buy: <Buy 
-            handleChange={props.buyHandleChange}
-            handleSubmit={props.buyHandleSubmit}
         />,
         sell: <Sell />,
         history: <History />
