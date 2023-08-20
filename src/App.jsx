@@ -17,7 +17,9 @@ function App() {
   const [number, setNumber] = React.useState();
   const [share, setShare] = React.useState();
   const [loggedIn, setLoggedIn] = React.useState(false);
-  const [data, setData] = React.useState(null)
+  const [data, setData] = React.useState({
+    email: ''
+  })
   const [taken, setTaken] = React.useState(false);
   const [user, setUser] = React.useState({
     email: ' ',
@@ -27,6 +29,8 @@ function App() {
     own_shares: { 'IBM': 2, 'APP': 3 },
     money: 1000
   });
+
+  //console.log(user);
 
   const fetchData = async () => {
 
@@ -46,7 +50,6 @@ function App() {
   React.useEffect(() => {
     fetchData();
   }, [])
-
 
   const handleSubmitLogin = async event => {
     event.preventDefault();
@@ -145,8 +148,11 @@ function App() {
           loggedIn={loggedIn}
         />} />
         <Route path='/dashboard' element={<Dashboard
+          setUser={setUser}
           loggedIn={loggedIn}
           logOut={logOut}
+          user={user}
+          data={data}
         />} />
       </Routes>
     </>

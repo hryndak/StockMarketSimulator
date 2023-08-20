@@ -4,15 +4,21 @@ import Buy from './dashboard/sites/buy'
 import Sell from './dashboard/sites/sell'
 import History from './dashboard/sites/history'
 import Check from './dashboard/sites/check'
+import Portfolio from './dashboard/sites/portfolio'
 import '/src/index.css'
 import supabase from '/src/config/supabaseClient'
 
 export default function Dashboard(props) {
 
+    const [buyStock, setBuyStock] = React.useState('');
+    const [buyQuantity, setBuyQuantity] = React.useState();
+
     const [selected, setSelected] = React.useState();
     const [stockData, setStockData] = React.useState({ c: 0, l: 0, h: 0 });
     const [symbol, setSymbol] = React.useState(' ');
     const [showStockPrice, setShowStockPrice] = React.useState(false);
+
+    const [db,sdb] = React.useState();
 
     const fetchStockData = (stock) => {
         let name = stock.toUpperCase();
@@ -21,6 +27,12 @@ export default function Dashboard(props) {
             .then(response => response.json())
             .then(data => setStockData(data))
             .catch(error => console.log(error))
+    }
+
+    for(let i = 0; i < props.data.length;i++) {
+        if(props.user.id === props.data[i].id){
+            console.log(props.data[i])
+        }
     }
 
     const symbolHandleChange = (event) => {
@@ -37,15 +49,38 @@ export default function Dashboard(props) {
         setShowStockPrice(true);
     }
 
+    const buyHandleChange = event => {
+        //setBuyStock(event.target.value)
+    }
+
+    const buyHandleSubmit = event => {
+        props.setUser(prevState => ({
+            ...prevState,
+            own_shares: {
+                ...prevState.own_shares,
+                [buyStock]: 1
+            }
+        }));
+        event.preventDefault();
+    }
+
     const components = {
         check: <Check
             handleChange={symbolHandleChange}
             handleSubmit={symbolHandleSubmit}
         />,
-        buy: <Buy 
+        buy: <Buy
+            handleChange={buyHandleChange}
+            handleSubmit={buyHandleSubmit}
+            setBuyStock={setBuyStock}
+            setBuyQuantity={setBuyQuantity}
+            user={props.user}
         />,
         sell: <Sell />,
-        history: <History />
+        history: <History />,
+        portfolio: <Portfolio
+            user={props.user}
+        />
     }
 
     const handleClick = (event) => {
@@ -77,7 +112,7 @@ export default function Dashboard(props) {
             {props.element}
             <nav>
                 <ul className='flex justify-end p-2 mr-10 text-lg'>
-                    <li className='ml-8 justify-left w-screen'>STOCK MARKET SIMULATOR</li>
+                    <li id='portfolio' onClick={handleClick} className='ml-8 justify-left w-screen'>STOCK MARKET SIMULATOR</li>
                     <li id='check' onClick={handleClick} className='ml-4'>Check</li>
                     <li id='buy' onClick={handleClick} className='ml-4'>Buy</li>
                     <li id='sell' onClick={handleClick} className='ml-4'>Sell</li>
