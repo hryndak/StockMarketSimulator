@@ -11,7 +11,7 @@ export default function Login(props) {
                 <div className='w-96 h-96 bg-neutral-200 rounded backdrop-blur-xs flex justify-center items-center'>
                     <form onSubmit={props.handleSubmitLogin} className='' >
                         <div className='flex justify-center items-center'>
-                            <img src='src/icons/stock.png' className='w-10 mb-4'></img>
+                            <img src='src/assets/stock.png' className='w-10 mb-4'></img>
                         </div>
                         <input onChange={props.handleChangeLogin} required type='email' placeholder='E-mail' className='placeholder:italic placeholder:text-slate-400 border-b-2 border-sky-700 p-4 mb-2 w-72 h-10 outline-0 bg-neutral-200 mt-' />
                         <br />

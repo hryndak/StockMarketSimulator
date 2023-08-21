@@ -1,16 +1,11 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+import React from 'react'
+import supabase from './config/supabaseClient'
+import './index.css'
 import Register from './Pages/register'
 import Login from './Pages/login'
 import Dashboard from './Pages/dashboard'
-import Buy from './Pages/dashboard/sites/buy'
-import Check from './Pages/dashboard/sites/check'
-import Sell from './Pages/dashboard/sites/sell'
-import History from './Pages/dashboard/sites/history'
-import React from 'react'
-import './index.css'
-import supabase from './config/supabaseClient'
-import { sha } from 'sha.js'
-
+import { localUserDataContext } from './context/localUserDataContext'
 
 
 function App() {
@@ -19,12 +14,13 @@ function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [data, setData] = React.useState(null)
   const [taken, setTaken] = React.useState(false);
-  const [user, setUser] = React.useState({
+  const [stockData, setStockData] = React.useState({});
+  const [localUser, setLocalUser] = React.useState({
     email: ' ',
     password: ' ',
     id: '',
     loggedIn: false,
-    own_shares: { 'IBM': 2, 'APP': 3 },
+    own_shares: {},
     money: 1000
   });
 
@@ -43,18 +39,20 @@ function App() {
     }
 
   }
+
   React.useEffect(() => {
     fetchData();
   }, [])
 
 
   const handleSubmitLogin = async event => {
+
     event.preventDefault();
 
     for (let i = 0; i < data.length; i++) {
-      if (user.email === data[i].email && user.password == data[i].password) {
+      if (localUser.email === data[i].email && localUser.password == data[i].password) {
         setLoggedIn(true);
-        setUser(prevState => ({
+        setLocalUser(prevState => ({
           ...prevState,
           id: data[i].id
         }));
@@ -64,13 +62,13 @@ function App() {
 
   const handleChangeLogin = event => {
     if (event.target.type === 'email') {
-      setUser(prevState => ({
+      setLocalUser(prevState => ({
         ...prevState,
         email: event.target.value
       }));
     }
     if (event.target.type === 'password') {
-      setUser(prevState => ({
+      setLocalUser(prevState => ({
         ...prevState,
         password: event.target.value
       }));
@@ -82,7 +80,7 @@ function App() {
     if (!taken) {
       const { error } = await supabase
         .from('login')
-        .insert({ email: user.email, password: user.password, money: user.money, own_shares: user.own_shares })
+        .insert({ email: localUser.email, password: localUser.password, money: localUser.money, own_shares: localUser.own_shares })
       event.preventDefault();
     } else {
       event.preventDefault();
@@ -97,7 +95,7 @@ function App() {
 
     //take email form input 
     if (event.target.type === 'email') {
-      setUser(prevState => ({
+      setLocalUser(prevState => ({
         ...prevState,
         email: event.target.value
       }));
@@ -107,13 +105,13 @@ function App() {
     //check if email input is already in database
     for (let i = 0; i < data.length; i++) {
       if (user.email === data[i].email) {
-        setTaken(true);
+        setLocalUser(true);
       }
     }
 
     //take password form input 
     if (event.target.type === 'password') {
-      setUser(prevState => ({
+      setLocalUser(prevState => ({
         ...prevState,
         password: event.target.value
       }));
@@ -124,31 +122,46 @@ function App() {
     setLoggedIn(false);
   }
 
+  const fetchStockData = (stock) => {
+    let stockData;
+    let name = stock.toUpperCase();
+    let url = import.meta.env.VITE_FINNHUB_URL + 'symbol=' + name + import.meta.env.VITE_FINNHUB_KEY;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => data)
+      .catch(error => console.log(error))
+
+    console.log(stockData);
+  }
+
+  React.useEffect(() => {
+    console.log(fetchStockData('IBM'));
+  }, [])
+
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Navigate to="/register" />} />
-        <Route path="/register" element={<Register
-          data={data}
-          fetchData={fetchData}
-          handleSubmitRegister={handleSubmitRegister}
-          handleChangeRegister={handleChangeRegister}
-          taken={taken}
-          handleSubmitLogin={handleSubmitLogin}
-          handleChangeLogin={handleChangeLogin}
-        />} />
-        <Route path="/login" element={<Login
-          data={data}
-          fetchData={fetchData}
-          handleChangeLogin={handleChangeLogin}
-          handleSubmitLogin={handleSubmitLogin}
-          loggedIn={loggedIn}
-        />} />
-        <Route path='/dashboard' element={<Dashboard
-          loggedIn={loggedIn}
-          logOut={logOut}
-        />} />
-      </Routes>
+      <localUserDataContext.Provider value={localUser} >
+        <Routes>
+          <Route path="/" element={<Navigate to="/register" />} />
+          <Route path="/register" element={<Register
+            handleSubmitRegister={handleSubmitRegister}
+            handleChangeRegister={handleChangeRegister}
+            taken={taken}
+            handleSubmitLogin={handleSubmitLogin}
+            handleChangeLogin={handleChangeLogin}
+          />} />
+          <Route path="/login" element={<Login
+            handleChangeLogin={handleChangeLogin}
+            handleSubmitLogin={handleSubmitLogin}
+            loggedIn={loggedIn}
+          />} />
+          <Route path='/dashboard' element={<Dashboard
+            loggedIn={loggedIn}
+            logOut={logOut}
+            fetchStockData={fetchStockData}
+          />} />
+        </Routes>
+      </localUserDataContext.Provider>
     </>
   )
 }

@@ -1,71 +1,27 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
-import React from 'react'
-import Buy from './dashboard/sites/buy'
-import Sell from './dashboard/sites/sell'
-import History from './dashboard/sites/history'
-import Check from './dashboard/sites/check'
+import React, { useContext } from 'react'
 import '/src/index.css'
 import supabase from '/src/config/supabaseClient'
+import { localUserDataContext } from '../context/localUserDataContext'
+import Portfolio from '../components/portfolio'
+import { fetchStockData } from '../fetchStockData'
 
 export default function Dashboard(props) {
 
-    const [selected, setSelected] = React.useState();
-    const [stockData, setStockData] = React.useState({ c: 0, l: 0, h: 0 });
-    const [symbol, setSymbol] = React.useState(' ');
-    const [showStockPrice, setShowStockPrice] = React.useState(false);
-
-    const fetchStockData = (stock) => {
-        let name = stock.toUpperCase();
-        let url = import.meta.env.VITE_FINNHUB_URL + 'symbol=' + name + import.meta.env.VITE_FINNHUB_KEY;
-        fetch(url)
-            .then(response => response.json())
-            .then(data => setStockData(data))
-            .catch(error => console.log(error))
-    }
-
-    const symbolHandleChange = (event) => {
-        setSymbol(event.target.value)
-        setShowStockPrice(false);
-    }
-
-    React.useEffect(() => {
-        fetchStockData(symbol);
-    }, [showStockPrice])
-
-    const symbolHandleSubmit = (event) => {
-        event.preventDefault();
-        setShowStockPrice(true);
-    }
-
-    const components = {
-        check: <Check
-            handleChange={symbolHandleChange}
-            handleSubmit={symbolHandleSubmit}
-        />,
-        buy: <Buy 
-        />,
-        sell: <Sell />,
-        history: <History />
-    }
-
-    const handleClick = (event) => {
-        if (components[event.target.id]) {
-            setSelected(components[event.target.id])
-        }
-        setShowStockPrice(false);
-    }
+    const data = useContext(localUserDataContext)
+    
 
     const prices = <div className='flex justify-center text-lg mt-4'>
         <div>
             <div>
                 <h2>
-                    Current price of {symbol.toUpperCase()} is: {stockData.c} $
+                    Current price of { } is: { } $
                 </h2>
                 <h2>
-                    Lowest: {stockData.l} $
+                    Lowest: { } $
                 </h2>
                 <h2>
-                    Highest: {stockData.h} $
+                    Highest: { } $
                 </h2>
             </div>
         </div>
@@ -74,19 +30,17 @@ export default function Dashboard(props) {
     return (
         <div>
             {!props.loggedIn && <Navigate to='/login' />}
-            {props.element}
             <nav>
                 <ul className='flex justify-end p-2 mr-10 text-lg'>
                     <li className='ml-8 justify-left w-screen'>STOCK MARKET SIMULATOR</li>
-                    <li id='check' onClick={handleClick} className='ml-4'>Check</li>
-                    <li id='buy' onClick={handleClick} className='ml-4'>Buy</li>
-                    <li id='sell' onClick={handleClick} className='ml-4'>Sell</li>
-                    <li id='history' onClick={handleClick} className='ml-4'>History</li>
+                    <li id='check' className='ml-4'>Check</li>
+                    <li id='buy' className='ml-4'>Buy</li>
+                    <li id='sell' className='ml-4'>Sell</li>
+                    <li id='history' className='ml-4'>History</li>
                     <li onClick={props.logOut} className='ml-4 hover:cursor-pointer underline decoration-sky-900'>LogOut</li>
                 </ul>
             </nav>
-            {selected}
-            {showStockPrice && prices}
+            <Portfolio></Portfolio>
         </div>
     )
 }
