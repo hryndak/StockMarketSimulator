@@ -12,7 +12,9 @@ function App() {
   const [number, setNumber] = React.useState();
   const [share, setShare] = React.useState();
   const [loggedIn, setLoggedIn] = React.useState(false);
-  const [data, setData] = React.useState(null)
+  const [data, setData] = React.useState({
+    email : 'a'
+  })
   const [taken, setTaken] = React.useState(false);
   const [stockData, setStockData] = React.useState({});
   const [localUser, setLocalUser] = React.useState({
@@ -126,25 +128,21 @@ function App() {
     setLoggedIn(false);
   }
 
-  const fetchStockData = (stock) => {
-    let stockData;
-    let name = stock.toUpperCase();
-    let url = import.meta.env.VITE_FINNHUB_URL + 'symbol=' + name + import.meta.env.VITE_FINNHUB_KEY;
-    fetch(url)
-      .then(response => response.json())
-      .then(data => data)
-      .catch(error => console.log(error))
-
-    console.log(stockData);
+  if(loggedIn) {
+    for(let i = 0; i < data.length; i++) {
+      let localId = localUser.id;
+      
+      if(data[i].id === localId) {
+        setData(data[i].own_shares);
+      }
+      
+    }
   }
 
-  React.useEffect(() => {
-    console.log(fetchStockData('IBM'));
-  }, [])
 
   return (
     <>
-      <localUserDataContext.Provider value={localUser} >
+      <localUserDataContext.Provider value={data} >
         <Routes>
           <Route path="/" element={<Navigate to="/register" />} />
           <Route path="/register" element={<Register
@@ -162,7 +160,6 @@ function App() {
           <Route path='/dashboard' element={<Dashboard
             loggedIn={loggedIn}
             logOut={logOut}
-            fetchStockData={fetchStockData}
           />} />
         </Routes>
       </localUserDataContext.Provider>

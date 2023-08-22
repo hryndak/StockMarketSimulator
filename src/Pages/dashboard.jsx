@@ -4,7 +4,7 @@ import '/src/index.css'
 import supabase from '/src/config/supabaseClient'
 import { localUserDataContext } from '../context/localUserDataContext'
 import Portfolio from '../components/portfolio'
-import { fetchStockData } from '../fetchStockData'
+//import { fetchStockData } from '../fetchStockData'
 
 export default function Dashboard(props) {
 
@@ -40,7 +40,8 @@ export default function Dashboard(props) {
                     <li onClick={props.logOut} className='ml-4 hover:cursor-pointer underline decoration-sky-900'>LogOut</li>
                 </ul>
             </nav>
-            <Portfolio></Portfolio>
+            <Portfolio>
+            </Portfolio>
         </div>
     )
 }
