@@ -6,19 +6,9 @@ import fetchStockData from '../fetchStockData'
 
 export default function Portfolio(props) {
 
-
-
     const localUserData = useContext(localUserDataContext);
-
-
     const arrayofUserData = Object.entries(localUserData);
-
-    console.log(arrayofUserData)
-
     const [stockData, setStockData] = React.useState(null);
-
-
-
 
     React.useEffect(() => {
         for (let i = 0; i < arrayofUserData.length; i++) {
@@ -37,24 +27,24 @@ export default function Portfolio(props) {
     }, []);
 
     return (
-        <div>
-            <table>
-                <thead>
+        <div className='flex justify-center mt-6'>
+            <table className='w-full'>
+                <thead className='bg-zinc-200'>
                     <tr>
-                        <th>Stock</th>
+                        <th>Symbol</th>
                         <th>Shares</th>
                         <th>Price</th>
                         <th>Total</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody >
                     {
                         arrayofUserData.map((ele) => (
-                            <tr>
+                            <tr className='bg-slate-100'>
                                 <th>{ele[0]}</th>
                                 <th>{ele[1]}</th>
-                                <th>{stockData && stockData[ele[0]]}</th>
-                                <th>{stockData && stockData[ele[0]] * ele[1]}</th>
+                                <th>{stockData && stockData[ele[0]]} <span className='text-green-500'>$</span></th>
+                                <th>{stockData && stockData[ele[0]] * ele[1]} <span className='text-green-500'>$</span></th>
                             </tr>
                         ))
                     }

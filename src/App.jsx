@@ -23,8 +23,10 @@ function App() {
     id: '',
     loggedIn: false,
     own_shares: {},
-    money: 1000
+    money: 10000
   });
+
+  //ADD ID TO DATA
 
   const fetchData = async () => {
 
@@ -82,22 +84,21 @@ function App() {
   }
 
   const handleSubmitRegister = async event => {
+    
     //checks if email is taken 
     if (!taken) {
       const { error } = await supabase
         .from('login')
-        .insert({ email: localUser.email, password: localUser.password, money: localUser.money, own_shares: localUser.own_shares })
+        .insert({ email: localUser.email, password: localUser.password,money : localUser.money,own_shares : localUser.own_shares})
       event.preventDefault();
     } else {
       event.preventDefault();
-      console.log('taken')
+      setTaken(true);
     }
 
   }
 
   const handleChangeRegister = event => {
-
-    event.preventDefault();
 
     //take email form input 
     if (event.target.type === 'email') {
@@ -110,8 +111,8 @@ function App() {
 
     //check if email input is already in database
     for (let i = 0; i < data.length; i++) {
-      if (user.email === data[i].email) {
-        setLocalUser(true);
+      if (localUser.email === data[i].email) {
+        setTaken(true);
       }
     }
 
@@ -123,6 +124,8 @@ function App() {
       }));
     }
   }
+
+  console.log(taken);
 
   const logOut = () => {
     setLoggedIn(false);
@@ -149,8 +152,6 @@ function App() {
             handleSubmitRegister={handleSubmitRegister}
             handleChangeRegister={handleChangeRegister}
             taken={taken}
-            handleSubmitLogin={handleSubmitLogin}
-            handleChangeLogin={handleChangeLogin}
           />} />
           <Route path="/login" element={<Login
             handleChangeLogin={handleChangeLogin}
