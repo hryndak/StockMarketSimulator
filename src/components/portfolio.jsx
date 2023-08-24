@@ -7,7 +7,7 @@ import fetchStockData from '../fetchStockData'
 export default function Portfolio(props) {
 
     const localUserData = useContext(localUserDataContext);
-    const arrayofUserData = Object.entries(localUserData);
+    const arrayofUserData = Object.entries(localUserData.own_shares);
     const [stockData, setStockData] = React.useState(null);
 
     React.useEffect(() => {

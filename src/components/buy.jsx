@@ -3,7 +3,7 @@ import React from 'react'
 import '/src/index.css'
 import supabase from '../config/supabaseClient';
 import fetchStockData from '../fetchStockData';
-import { localUserDataContext } from '../context/localUserDataContext';
+import { localUserDataContext ,localUserIDCOntext } from '../context/localUserDataContext';
 
 export default function Buy(props) {
     const [price, setPrice] = React.useState();
@@ -13,9 +13,10 @@ export default function Buy(props) {
     });
 
     const data = React.useContext(localUserDataContext)
-    console.log(data);
 
-    const tmp = data;
+    console.log(price);
+
+    const tmp = data.own_shares;
 
     const onChangeBuy = event => {
         if (event.target.type === 'text') {
@@ -32,6 +33,15 @@ export default function Buy(props) {
             }))
         }
     }
+    
+    //ADD :
+    // CHECK IF STOCK EXIST
+    // CHECK IF ALREADY STOCK HAS BEEN BOUGHT
+    // UPDATE MONEY
+
+    if(data.own_shares.hasOwnProperty(toBuy.stock)) {
+        console.log(toBuy.stock)
+    }
 
     const onSubmitBuy = async event => {
         event.preventDefault();
@@ -46,16 +56,11 @@ export default function Buy(props) {
         fetchData();
     }
 
-    console.log(toBuy.stock, price);
-
-
-    console.log(tmp);
-
     async function addData() {
         const { error } = await supabase
             .from('login')
             .update({own_shares : tmp})
-            .eq('id',50)
+            .eq('id',data.id)
 
     }
 

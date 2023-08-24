@@ -13,6 +13,8 @@ export default function Dashboard(props) {
 
     const data = useContext(localUserDataContext)
 
+    console.log('Data: ', data);
+
     const [symbol, setSybmol] = React.useState(
         {
             symbol: 'NULL',
@@ -37,8 +39,6 @@ export default function Dashboard(props) {
             isShowed: false
         }));
     }
-
-    console.log(symbol)
     const onSubmitCheck = event => {
         event.preventDefault();
         async function fetchData() {
