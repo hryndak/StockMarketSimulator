@@ -26,8 +26,6 @@ function App() {
     money: 10000
   });
 
-  //ADD ID TO DATA
-
   const fetchData = async () => {
 
     //fetch database data
