@@ -20,8 +20,6 @@ export default function Buy(props) {
     }, [])
 
 
-    console.log(userMoney);
-
     const onChangeBuy = event => {
         if (event.target.type === 'text') {
 
@@ -63,6 +61,7 @@ export default function Buy(props) {
                                 let sumQuantity = ownQuantity + parseInt(toBuy.quantity);
                                 userData.own_shares[arrayOfStock[i][0]] = sumQuantity;
                                 setUserMoney(prevState => prevState - (data.c * toBuy.quantity))
+                                addData();
                                 matchFound = true;
                             } else {
                                 console.log('No money');
@@ -71,11 +70,14 @@ export default function Buy(props) {
                         }
                     }
                     if (!matchFound) {
-                        setPrice(data.c); // Update state with fetched data
-
-                        userData.own_shares[toBuy.stock] = parseInt(toBuy.quantity)
-                        console.log("ADDED");
-                        //addData();
+                        if (data.c <= userMoney) {
+                            setUserMoney(prevState => prevState - (data.c * toBuy.quantity))
+                            addData();
+                            userData.own_shares[toBuy.stock] = parseInt(toBuy.quantity)
+                            console.log("ADDED");
+                        } else {
+                            console.log('No money');
+                        }
                     }
                 }
             }
@@ -83,12 +85,12 @@ export default function Buy(props) {
         fetchData();
     }
 
-    console.log(userMoney)
-
+    
+    console.log('przed',userMoney)
     async function addData() {
         const { error } = await supabase
             .from('login')
-            .update({ own_shares: userData.own_shares })
+            .update({ own_shares: userData.own_shares, money: userMoney })
             .eq('id', userData.id)
 
     }
