@@ -12,13 +12,13 @@ export default function Buy(props) {
         stock: ' ',
         quantity: 0
     });
+    const [stockData, setStockData] = React.useState({});
 
     const userData = React.useContext(localUserDataContext)
 
     React.useEffect(() => {
         setUserMoney(userData.money)
     }, [])
-
 
     const onChangeBuy = event => {
         if (event.target.type === 'text') {
@@ -35,58 +35,52 @@ export default function Buy(props) {
             }))
         }
     }
-
-    //ADD :
-    // CHECK IF STOCK EXIST
-    // CHECK IF ALREADY STOCK HAS BEEN BOUGHT
-    // UPDATE MONEY
-
-
+    
+    
     const arrayOfStock = Object.entries(userData.own_shares);
-
-
+    
+    
     const onSubmitBuy = async event => {
         event.preventDefault();
-        async function fetchData() {
-            const data = await fetchStockData(toBuy.stock);
-            if (data !== undefined) {
-                if (data.c && data.l && data.h !== 0) {
-                    let matchFound = false;
-                    for (let i = 0; i < arrayOfStock.length; i++) {
-                        //console.log("Comparing:", toBuy.stock, arrayOfStock[i][0]);
-                        if (toBuy.stock === arrayOfStock[i][0]) {
-                            if (data.c <= userMoney) {
-                                let ownQuantity = 0;
-                                ownQuantity = arrayOfStock[i][1];
-                                let sumQuantity = ownQuantity + parseInt(toBuy.quantity);
-                                userData.own_shares[arrayOfStock[i][0]] = sumQuantity;
-                                setUserMoney(prevState => prevState - (data.c * toBuy.quantity))
-                                addData();
-                                matchFound = true;
-                            } else {
-                                console.log('No money');
-                                break;
-                            }
-                        }
-                    }
-                    if (!matchFound) {
-                        if (data.c <= userMoney) {
-                            setUserMoney(prevState => prevState - (data.c * toBuy.quantity))
-                            addData();
-                            userData.own_shares[toBuy.stock] = parseInt(toBuy.quantity)
-                            console.log("ADDED");
-                        } else {
-                            console.log('No money');
-                        }
+        
+        const data = await fetchStockData(toBuy.stock);
+        
+        if (data !== undefined) {
+            setStockData(data);
+            
+            if (data.c && data.l && data.h !== 0) {
+                const totalCost = data.c * toBuy.quantity;
+                
+                let matchFound = false;
+                for (let i = 0; i < arrayOfStock.length; i++) {
+                if (toBuy.stock === arrayOfStock[i][0]) {
+                    if (stockData.c <= userMoney && userMoney !== undefined) {
+                        let sumQuantity = arrayOfStock[i][1] + parseInt(toBuy.quantity);
+                        userData.own_shares[arrayOfStock[i][0]] = sumQuantity;
+                        setUserMoney(prevState => prevState - (stockData.c * toBuy.quantity))
+                        addData();
+                        matchFound = true;
+                        props.handleHelpSubmit();
+                    } else {
+                        console.log('No money');
+                        break;
                     }
                 }
             }
         }
-        fetchData();
+            if (!matchFound) {
+                if (stockData.c <= userMoney) {
+                    setUserMoney(prevState => prevState - (stockData.c * toBuy.quantity))
+                    addData();
+                    userData.own_shares[toBuy.stock] = parseInt(toBuy.quantity)
+                    console.log("ADDED");
+                } else {
+                    console.log('No money');
+                }
+            }
+        }
     }
-
     
-    console.log('przed',userMoney)
     async function addData() {
         const { error } = await supabase
             .from('login')

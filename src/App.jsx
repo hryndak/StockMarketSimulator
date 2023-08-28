@@ -33,9 +33,8 @@ function App() {
     }
     if (data) {
       setData(data)
-      console.log("z DB", data);
-
     }
+    console.log("fetched", data[1].money)
 
   }
 
@@ -46,7 +45,7 @@ function App() {
         if (data[i].id === localId) {
           setLocalUser(prevState => ({
             ...prevState,
-            own_shares: data[i].own_shares,
+            own_shares: data[i].own_shares, money : data[i].money
           }));
         }
       }
@@ -56,6 +55,8 @@ function App() {
   React.useEffect(() => {
     fetchData();
   }, [])
+
+  
 
   const handleSubmitLogin = async event => {
 
@@ -71,6 +72,8 @@ function App() {
       }
     }
   }
+
+  //console.log('local: ', localUser.money)
 
   const handleChangeLogin = event => {
     if (event.target.type === 'email') {
@@ -151,6 +154,7 @@ function App() {
           <Route path='/dashboard' element={<Dashboard
             loggedIn={loggedIn}
             logOut={logOut}
+            fetchData={fetchData}
           />} />
         </Routes>
       </localUserDataContext.Provider>

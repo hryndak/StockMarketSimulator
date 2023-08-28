@@ -12,7 +12,6 @@ import Buy from '../components/buy'
 export default function Dashboard(props) {
 
     const data = useContext(localUserDataContext)
-
     const [symbol, setSybmol] = React.useState(
         {
             symbol: 'NULL',
@@ -27,7 +26,7 @@ export default function Dashboard(props) {
     const [selected, setSelected] = React.useState(<Portfolio />);
     const [toBuy, setToBuy] = React.useState({
         stock: ' ',
-        quantity : 0
+        quantity: 0
     })
 
     const onChangeCheck = event => {
@@ -57,24 +56,15 @@ export default function Dashboard(props) {
         fetchData();
     }
 
-    const onChangeBuy = event => {
-        if(event.target.type === 'text') {
-
-            setToBuy(prev => ({
-                ...prev,
-                stock : event.target.value
-            }))
+    const handleClick = (event) => {
+        props.fetchData();
+        if (components[event.target.id]) {
+            setSelected(components[event.target.id])
         }
-        if(event.target.type === 'number') {
-            setToBuy(prev => ({
-                ...prev,
-                quantity : event.target.value
-            }))
-        }
-    }
-
-    const onSubmitBuy = event => {
-        event.preventDefault();
+        setSybmol(prev => ({
+            ...prev,
+            isShowed: false
+        }));
     }
 
     const components = {
@@ -84,21 +74,11 @@ export default function Dashboard(props) {
         />,
         portfolio: <Portfolio />,
         buy: <Buy
-            handleSubmit={onSubmitBuy}
-            handleChange={onChangeBuy}
+            handleHelpSubmit={props.fetchData}
         />,
 
     }
 
-    const handleClick = (event) => {
-        if (components[event.target.id]) {
-            setSelected(components[event.target.id])
-        }
-        setSybmol(prev => ({
-            ...prev,
-            isShowed: false
-        }));
-    }
 
     const prices = <div className='flex justify-center text-lg mt-4'>
         <div>
@@ -116,14 +96,12 @@ export default function Dashboard(props) {
         </div>
     </div>
 
-
     return (
         <div>
             {!props.loggedIn && <Navigate to='/login' />}
             <nav>
                 <ul className='flex justify-end p-2 mr-10 text-lg'>
                     <li id='portfolio' onClick={handleClick} className='ml-8 justify-left w-screen'>STOCK MARKET SIMULATOR</li>
-                    <li id='check' onClick={handleClick} className='justify-center w-screen'>{data.money}$</li>
                     <li id='check' onClick={handleClick} className='ml-4'>Check</li>
                     <li id='buy' onClick={handleClick} className='ml-4'>Buy</li>
                     <li id='sell' onClick={handleClick} className='ml-4'>Sell</li>

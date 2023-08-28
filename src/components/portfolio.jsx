@@ -49,6 +49,7 @@ export default function Portfolio(props) {
                         ))
                     }
                 </tbody>
+                {localUserData.money}
             </table>
         </div>
     )
