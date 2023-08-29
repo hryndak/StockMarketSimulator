@@ -6,7 +6,6 @@ import fetchStockData from '../fetchStockData';
 import { localUserDataContext, localUserIDCOntext } from '../context/localUserDataContext';
 
 export default function Buy(props) {
-    const [price, setPrice] = React.useState(0);
     const [userMoney, setUserMoney] = React.useState();
     const [toBuy, setToBuy] = React.useState({
         stock: ' ',
@@ -15,10 +14,47 @@ export default function Buy(props) {
     const [stockData, setStockData] = React.useState({});
 
     const userData = React.useContext(localUserDataContext)
+    const arrayOfStock = Object.entries(userData.own_shares);
 
+    const clearInputs = () => {
+        setToBuy(prev => ({
+            ...prev,
+            stock : '' , quantity : 0
+        }));
+    }
+    
+    async function lookUp(symbol) {
+        const data = await fetchStockData(symbol); // Replace with the desired stock symbol
+        if (data !== undefined) {
+            return data
+        }
+    }
+        
     React.useEffect(() => {
+        console.log(`refreshed ${userMoney}$`)
         setUserMoney(userData.money)
-    }, [])
+    }, [toBuy])
+    
+    console.log(userData.id)
+
+    const onSubmitBuy = async event => {
+        event.preventDefault();
+        clearInputs();
+        let stockPrice = await lookUp(toBuy.stock);
+        let overallPrice = Math.round((stockPrice.c * toBuy.quantity) * 100 ) / 100;
+        if(stockPrice.c && stockPrice.h && stockPrice.l !== 0) { // CHECK IF STOCK EXISTS 
+            if(userMoney >= overallPrice) {  // CHECK IF USER HAS MONEY
+                
+            }
+        }
+
+    }
+    async function addData(id) {
+        const { error } = await supabase
+            .from('login')
+            .update({ own_shares: userData.own_shares, money: userMoney })
+            .eq('id', id)
+    }
 
     const onChangeBuy = event => {
         if (event.target.type === 'text') {
@@ -35,59 +71,9 @@ export default function Buy(props) {
             }))
         }
     }
-    
-    
-    const arrayOfStock = Object.entries(userData.own_shares);
-    
-    
-    const onSubmitBuy = async event => {
-        event.preventDefault();
-        
-        const data = await fetchStockData(toBuy.stock);
-        
-        if (data !== undefined) {
-            setStockData(data);
-            
-            if (data.c && data.l && data.h !== 0) {
-                const totalCost = data.c * toBuy.quantity;
-                
-                let matchFound = false;
-                for (let i = 0; i < arrayOfStock.length; i++) {
-                if (toBuy.stock === arrayOfStock[i][0]) {
-                    if (stockData.c <= userMoney && userMoney !== undefined) {
-                        let sumQuantity = arrayOfStock[i][1] + parseInt(toBuy.quantity);
-                        userData.own_shares[arrayOfStock[i][0]] = sumQuantity;
-                        setUserMoney(prevState => prevState - (stockData.c * toBuy.quantity))
-                        addData();
-                        matchFound = true;
-                        props.handleHelpSubmit();
-                    } else {
-                        console.log('No money');
-                        break;
-                    }
-                }
-            }
-        }
-            if (!matchFound) {
-                if (stockData.c <= userMoney) {
-                    setUserMoney(prevState => prevState - (stockData.c * toBuy.quantity))
-                    addData();
-                    userData.own_shares[toBuy.stock] = parseInt(toBuy.quantity)
-                    console.log("ADDED");
-                } else {
-                    console.log('No money');
-                }
-            }
-        }
-    }
-    
-    async function addData() {
-        const { error } = await supabase
-            .from('login')
-            .update({ own_shares: userData.own_shares, money: userMoney })
-            .eq('id', userData.id)
 
-    }
+
+
 
 
     return (
@@ -95,8 +81,8 @@ export default function Buy(props) {
             <h1>BUY</h1>
             <div className='flex justify-center'>
                 <form onSubmit={onSubmitBuy}>
-                    <input type='text' onChange={onChangeBuy} required className='border' />
-                    <input type='number' onChange={onChangeBuy} required className='border' />
+                    <input type='text' value={toBuy.stock} onChange={onChangeBuy} required className='border' />
+                    <input type='number' value={toBuy.quantity} onChange={onChangeBuy} required className='border' />
                     <input type='submit' className='border' />
                 </form>
             </div>
