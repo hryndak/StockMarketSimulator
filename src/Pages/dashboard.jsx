@@ -12,65 +12,29 @@ import Buy from '../components/buy'
 export default function Dashboard(props) {
 
     const data = useContext(localUserDataContext)
-    const [symbol, setSybmol] = React.useState(
-        {
-            symbol: 'NULL',
-            isShowed: false
-        }
-    );
+    const [showed,setShowed] = React.useState(false);
     const [stockData, setStockData] = React.useState({
         current: 0,
         lowest: 0,
-        highest: 0
+        highest: 0,
+        symbol : ''
     })
     const [selected, setSelected] = React.useState(<Portfolio />);
-    const [toBuy, setToBuy] = React.useState({
-        stock: ' ',
-        quantity: 0
-    })
 
-    const onChangeCheck = event => {
-        setSybmol(prev => ({
-            ...prev,
-            symbol: event.target.value,
-            isShowed: false
-        }));
-    }
-    const onSubmitCheck = event => {
-        event.preventDefault();
-        async function fetchData() {
-            const data = await fetchStockData(symbol.symbol);
-            if (data !== undefined) {
-                setStockData(prev => ({
-                    ...prev,
-                    current: data.c,
-                    lowest: data.l,
-                    highest: data.h
-                })); // Update state with fetched data
-            }
-        }
-        setSybmol(prev => ({
-            ...prev,
-            isShowed: true
-        }));
-        fetchData();
-    }
+    console.log(stockData)
 
     const handleClick = (event) => {
         props.fetchData();
         if (components[event.target.id]) {
             setSelected(components[event.target.id])
         }
-        setSybmol(prev => ({
-            ...prev,
-            isShowed: false
-        }));
+        setShowed(false);
     }
 
     const components = {
         check: <Check
-            handleChange={onChangeCheck}
-            handleSubmit={onSubmitCheck}
+            setStockData={setStockData}
+            setShowed={setShowed}
         />,
         portfolio: <Portfolio />,
         buy: <Buy
@@ -84,7 +48,7 @@ export default function Dashboard(props) {
         <div>
             <div>
                 <h2>
-                    Current price of {symbol.symbol} is: {stockData.current} $
+                    Current price of {stockData.symbol} is: {stockData.current} $
                 </h2>
                 <h2>
                     Lowest: {stockData.lowest} $
@@ -110,7 +74,7 @@ export default function Dashboard(props) {
                 </ul>
             </nav>
             {selected}
-            {symbol.isShowed && prices}
+            {showed && prices}
         </div>
     )
 }
