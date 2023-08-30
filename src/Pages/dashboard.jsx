@@ -7,7 +7,7 @@ import fetchStockData from '../fetchStockData'
 import Portfolio from '../components/portfolio'
 import Check from '../components/check'
 import Buy from '../components/buy'
-
+import Sell from '../components/sell'
 
 export default function Dashboard(props) {
 
@@ -20,8 +20,6 @@ export default function Dashboard(props) {
         symbol : ''
     })
     const [selected, setSelected] = React.useState(<Portfolio />);
-
-    console.log(stockData)
 
     const handleClick = (event) => {
         props.fetchData();
@@ -40,9 +38,8 @@ export default function Dashboard(props) {
         buy: <Buy
             handleHelpSubmit={props.fetchData}
         />,
-
+        sell : <Sell />,
     }
-
 
     const prices = <div className='flex justify-center text-lg mt-4'>
         <div>

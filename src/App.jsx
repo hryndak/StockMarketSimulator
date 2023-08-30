@@ -34,8 +34,6 @@ function App() {
     if (data) {
       setData(data)
     }
-    console.log("fetched", data[1].money)
-
   }
 
   React.useEffect(() => {

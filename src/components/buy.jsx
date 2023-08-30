@@ -11,8 +11,6 @@ export default function Buy(props) {
         stock: ' ',
         quantity: 0
     });
-    const [stockData, setStockData] = React.useState({});
-
     const userData = React.useContext(localUserDataContext)
     const dataArr = Object.entries(userData.own_shares);
 
@@ -31,7 +29,6 @@ export default function Buy(props) {
     }
 
     React.useEffect(() => {
-        console.log(`refreshed ${userMoney}$`)
         setUserMoney(userData.money)
     }, [])
 
@@ -66,7 +63,7 @@ export default function Buy(props) {
                 if (!matchFound && stockPrice.c <= userMoney) {
                     const updatedMoney = userMoney - totalCost;
                     addData(userData.id, updatedMoney);
-                    userData.own_shares[toBuy.stock] = parseInt(toBuy.quantity)
+                    userData.own_shares[toBuy.stock.toString()] = parseInt(toBuy.quantity)
                 }
 
             } else {
@@ -89,10 +86,6 @@ export default function Buy(props) {
             }))
         }
     }
-
-
-
-
 
     return (
         <div>
