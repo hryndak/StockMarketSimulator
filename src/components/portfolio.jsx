@@ -40,14 +40,18 @@ export default function Portfolio(props) {
                 <tbody >
                     {
                         arrayofUserData.map((ele) => (
-                            <tr className='bg-slate-100'>
-                                <th>{ele[0]}</th>
-                                <th>{ele[1]}</th>
-                                <th>{stockData && stockData[ele[0]]} <span className='text-green-500'>$</span></th>
-                                <th>{stockData && stockData[ele[0]] * ele[1]} <span className='text-green-500'>$</span></th>
-                            </tr>
+                            // Add a condition to check if ele[1] is not equal to 0
+                            ele[1] !== 0 && (
+                                <tr className='bg-slate-100'>
+                                    <th>{ele[0]}</th>
+                                    <th>{ele[1]}</th>
+                                    <th>{stockData && stockData[ele[0]]} <span className='text-green-500'>$</span></th>
+                                    <th>{stockData && stockData[ele[0]] * ele[1]} <span className='text-green-500'>$</span></th>
+                                </tr>
+                            )
                         ))
                     }
+
                 </tbody>
                 {localUserData.money}
             </table>
