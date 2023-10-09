@@ -27,34 +27,37 @@ export default function Portfolio(props) {
     }, []);
 
     return (
-        <div className='flex justify-center mt-6'>
-            <table className='w-full'>
-                <thead className='bg-zinc-200'>
-                    <tr>
-                        <th>Symbol</th>
-                        <th>Shares</th>
-                        <th>Price</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody >
-                    {
-                        arrayofUserData.map((ele) => (
-                            // Add a condition to check if ele[1] is not equal to 0
-                            ele[1] !== 0 && (
-                                <tr className='bg-slate-100'>
-                                    <th>{ele[0]}</th>
-                                    <th>{ele[1]}</th>
-                                    <th>{stockData && stockData[ele[0]]} <span className='text-green-500'>$</span></th>
-                                    <th>{stockData && stockData[ele[0]] * ele[1]} <span className='text-green-500'>$</span></th>
-                                </tr>
-                            )
-                        ))
-                    }
-
-                </tbody>
-                {localUserData.money}
-            </table>
+        <div className='mt-8'>
+            <div className='flex justify-center text-xl'>
+                <h1>Your balance is: {localUserData.money}<span className='text-green-500'> $</span></h1>
+            </div>
+            <div className='flex justify-center mt-8'>
+                <table className='w-full'>
+                    <thead className='bg-zinc-200'>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Shares</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody >
+                        {
+                            arrayofUserData.map((ele) => (
+                                // Add a condition to check if ele[1] is not equal to 0
+                                ele[1] !== 0 && (
+                                    <tr className='bg-slate-100'>
+                                        <th>{ele[0]}</th>
+                                        <th>{ele[1]}</th>
+                                        <th>{stockData && stockData[ele[0]]} <span className='text-green-500'>$</span></th>
+                                        <th>{stockData && stockData[ele[0]] * ele[1]} <span className='text-green-500'>$</span></th>
+                                    </tr>
+                                )
+                            ))
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     )
 }

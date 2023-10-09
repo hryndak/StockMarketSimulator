@@ -29,6 +29,10 @@ export default function Dashboard(props) {
         setShowed(false);
     }
 
+    const goToDash = () => {
+        setSelected(components['portfolio']);
+    }
+
     const components = {
         check: <Check
             setStockData={setStockData}
@@ -38,7 +42,7 @@ export default function Dashboard(props) {
         buy: <Buy
             handleHelpSubmit={props.fetchData}
         />,
-        sell : <Sell />,
+        sell : <Sell goToDash={goToDash} />,
     }
 
     const prices = <div className='flex justify-center text-lg mt-4'>
@@ -60,13 +64,13 @@ export default function Dashboard(props) {
     return (
         <div>
             {!props.loggedIn && <Navigate to='/login' />}
-            <nav>
+            <nav className='bg-sky-200'>
                 <ul className='flex justify-end p-2 mr-10 text-lg'>
-                    <li id='portfolio' onClick={handleClick} className='ml-8 justify-left w-screen'>STOCK MARKET SIMULATOR</li>
-                    <li id='check' onClick={handleClick} className='ml-4'>Check</li>
-                    <li id='buy' onClick={handleClick} className='ml-4'>Buy</li>
-                    <li id='sell' onClick={handleClick} className='ml-4'>Sell</li>
-                    <li id='history' onClick={handleClick} className='ml-4'>History</li>
+                    <li id='portfolio' onClick={handleClick} className='ml-8 justify-left w-screen hover:cursor-pointer'>STOCK MARKET SIMULATOR</li>
+                    <li id='check' onClick={handleClick} className='ml-4 hover:cursor-pointer hover:text-sky-500'>Check</li>
+                    <li id='buy' onClick={handleClick} className='ml-4 hover:cursor-pointer hover:text-sky-500'>Buy</li>
+                    <li id='sell' onClick={handleClick} className='ml-4 hover:cursor-pointer hover:text-sky-500'>Sell</li>
+                    <li id='portfolio' onClick={handleClick} className='ml-4 hover:cursor-pointer hover:text-sky-500'>Portfolio</li>
                     <li onClick={props.logOut} className='ml-4 hover:cursor-pointer underline decoration-sky-900'>LogOut</li>
                 </ul>
             </nav>

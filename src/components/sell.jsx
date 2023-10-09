@@ -67,25 +67,30 @@ export default function Buy(props) {
             updatedOwnShares[toSell.symbol] = totalStockQuantity;
             addData(userData.id, updatedMoney, updatedOwnShares);
         }
+        //props.goToDash();
     }
 
     return (
-        <div>
-            <h1>SELL</h1>
-            <form onSubmit={handleSubmit}>
-                <select name='select' onChange={handleChange} className='border'>
-                    <option selected='true' disabled='disabled' >SELECT</option>
-                    {ownStockArray.map((ele) => (
-                        ele[1] !== 0 && (
-                            <option key={ele[0]} value={ele[0]}>
-                                {ele[0]}
-                            </option>
-                        )
-                    ))}
-                </select>
-                <input name='number' onChange={handleChange} type='number' className='border' />
-                <input type='submit' className='border' />
-            </form>
+        <div className='mt-16'>
+            <h1 className='flex justify-center text-xl mb-4'>Sell your shares</h1>
+            <div className='flex justify-center'>
+                <form className='flex flex-col items-center' onSubmit={handleSubmit}>
+                    <div className='flex flex-row items-center mb-4'>
+                        <select name='select' onChange={handleChange} className='pl-2 border-b-2 w-28 h-8'>
+                            <option selected='true' disabled='disabled'>Select</option>
+                            {ownStockArray.map((ele) => (
+                                ele[1] !== 0 && (
+                                    <option key={ele[0]} value={ele[0]}>
+                                        {ele[0]}
+                                    </option>
+                                )
+                            ))}
+                        </select>
+                    </div>
+                    <input name='number' placeholder='Quantity' min={0} value={toSell.quantity} onChange={handleChange} type='number' className='w-60 h-7 mr-2 border-sky-700 border-b-2 pl-2' />
+                    <input type='submit' value='Sell' className='border mt-4 w-32 h-8 rounded bg-blue-500 hover:bg-blue-600 text-white' />
+                </form>
+            </div>
         </div>
     )
 }
