@@ -1,7 +1,7 @@
 # Stock Market Simulator
 
 An WebApp that simulate playing at stock exchange.
-App was made in ReactJS.
+App was made in ReactJS via Vite.
 Also I used tailwind instead of regular CSS file.
 
 App is conntecting to Finnhub Stock API for stock price data.
